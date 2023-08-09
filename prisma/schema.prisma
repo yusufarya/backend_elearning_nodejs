@@ -1,11 +1,112 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  nomor_identitas String          @id @db.Char(20)
+  nama            String          @db.VarChar(100)
+  jenis_kel       users_jenis_kel
+  tempat_lahir    String          @db.VarChar(30)
+  tgl_lahir       DateTime        @db.Date
+  no_telp         String          @db.Char(20)
+  alamat          String?         @db.Text
+  agama           String          @db.VarChar(30)
+  kelas_id        String?         @db.Char(5)
+  mapel_id        String?         @db.Char(5)
+  email           String          @db.VarChar(256)
+  password        String          @db.VarChar(256)
+  gambar          String?         @db.Text
+  status          Int
+  role_id         Int
+  tgl_dibuat      DateTime        @db.Date
+
+  @@map("users")
+}
+
+model jadwal_pelajaran {
+  id             Int       @id @default(autoincrement())
+  kode_pelajaran String    @db.VarChar(100)
+  semester       String?   @default("01") @db.Char(2)
+  hari           String    @db.VarChar(50)
+  jam_mulai      DateTime  @db.Time(0)
+  jam_selesai    DateTime  @db.Time(0)
+  tgl_dibuat     DateTime  @db.Date
+  dibuat_oleh    String    @db.VarChar(50)
+  tgl_update     DateTime? @db.Date
+  update_oleh    String?   @db.VarChar(50)
+}
+
+model kelas {
+  id    Int    @id @default(autoincrement())
+  kelas String @db.VarChar(30)
+}
+
+model mata_pelajaran {
+  kode        String    @id @db.Char(5)
+  pelajaran   String    @db.VarChar(100)
+  kelas_id    Int
+  tgl_dibuat  DateTime  @db.Date
+  dibuat_oleh String    @db.VarChar(50)
+  tgl_update  DateTime? @db.Date
+  update_oleh String?   @db.VarChar(50)
+}
+
+model materi {
+  id             Int      @id @default(autoincrement())
+  judul          String   @db.VarChar(50)
+  pembahasan     String   @db.Text
+  tanggal        DateTime @db.Date
+  file           String   @db.Text
+  link           String   @db.VarChar(50)
+  kode_pelajaran String   @db.Char(5)
+  semester       String?  @default("01") @db.Char(2)
+  pertemuan_id   Int
+  tgl_dibuat     DateTime @db.Date
+  dibuat_oleh    String   @db.VarChar(50)
+  tgl_update     DateTime @db.Date
+  update_oleh    String   @db.VarChar(50)
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model nilai {
+  id          Int      @id
+  nomo_siswa  String   @db.Char(20)
+  tugas_id    Int
+  nilai       Float?
+  tgl_update  DateTime @db.Date
+  update_oleh String   @db.Char(20)
+
+  @@ignore
+}
+
+model role {
+  id   Int    @id @default(autoincrement())
+  role String @db.VarChar(30)
+}
+
+model semester {
+  kode String @id @default("01") @db.Char(2)
+  nama String @db.VarChar(30)
+}
+
+model tugas {
+  id             Int      @id @default(autoincrement())
+  kode_pelajaran String   @db.Char(5)
+  semester       String?  @default("01") @db.Char(2)
+  tugas          String?  @db.VarChar(56)
+  deskripsi      String?  @db.Text
+  kelas_id       String   @db.Char(20)
+  pertemuan      Int
+  tgl_update     DateTime @db.Date
+  update_oleh    String   @db.VarChar(50)
+}
+
+enum users_jenis_kel {
+  L
+  P
 }
