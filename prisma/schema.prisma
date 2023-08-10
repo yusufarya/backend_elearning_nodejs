@@ -7,106 +7,151 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  nomor_identitas String          @id @db.Char(20)
-  nama            String          @db.VarChar(100)
-  jenis_kel       users_jenis_kel
-  tempat_lahir    String          @db.VarChar(30)
-  tgl_lahir       DateTime        @db.Date
-  no_telp         String          @db.Char(20)
-  alamat          String?         @db.Text
-  agama           String          @db.VarChar(30)
-  kelas_id        String?         @db.Char(5)
-  mapel_id        String?         @db.Char(5)
-  email           String          @db.VarChar(256)
-  password        String          @db.VarChar(256)
-  gambar          String?         @db.Text
+model Users {
+  identity_number String        @id @db.Char(20)
+  name            String        @db.VarChar(100)
+  gender          UsersGender
+  place_of_birth  String        @db.VarChar(30)
+  date_of_birth   DateTime      @db.Date
+  telp            String        @db.Char(20)
+  address         String?       @db.Text
+  religion        String        @db.VarChar(30)
+  classes         Classes       @relation(fields: [classId], references: [id_class])
+  classId         Int           @unique
+  subjectId       String?       @db.Char(5)
+  email           String        @db.VarChar(256)
+  password        String        @db.VarChar(256)
+  image           String?       @db.Text
   status          Int
-  role_id         Int
-  tgl_dibuat      DateTime        @db.Date
+  role            UserRole     @relation(fields: [roleId], references: [id])
+  roleId          Int
+  token           String?       @db.VarChar(100)
+  createdAt       DateTime      @db.Date @default(now())
 
   @@map("users")
 }
 
-model jadwal_pelajaran {
-  id             Int       @id @default(autoincrement())
-  kode_pelajaran String    @db.VarChar(100)
-  semester       String?   @default("01") @db.Char(2)
-  hari           String    @db.VarChar(50)
-  jam_mulai      DateTime  @db.Time(0)
-  jam_selesai    DateTime  @db.Time(0)
-  tgl_dibuat     DateTime  @db.Date
-  dibuat_oleh    String    @db.VarChar(50)
-  tgl_update     DateTime? @db.Date
-  update_oleh    String?   @db.VarChar(50)
+model Classes {
+  id_class    Int    @id @default(autoincrement())
+  class String @db.VarChar(30)
+  users Users?
+  categories ClassesCategory[]
+  subjects Subjects[]
+
+  @@map("classes")
 }
 
-model kelas {
-  id    Int    @id @default(autoincrement())
-  kelas String @db.VarChar(30)
+model ClassesCategory {
+  id    Int     @id @default(autoincrement())
+  name  String  @db.VarChar(100)
+  classes Classes @relation(fields: [classId], references: [id_class])
+  classId Int
+
+  @@map("classesCategory")
 }
 
-model mata_pelajaran {
-  kode        String    @id @db.Char(5)
-  pelajaran   String    @db.VarChar(100)
-  kelas_id    Int
-  tgl_dibuat  DateTime  @db.Date
-  dibuat_oleh String    @db.VarChar(50)
-  tgl_update  DateTime? @db.Date
-  update_oleh String?   @db.VarChar(50)
+model Subjects {
+  id_subject  Int       @id
+  subjects    String    @db.VarChar(100)
+  classes     Classes @relation(fields: [classId], references: [id_class])
+  classId     Int
+  createdAt   DateTime  @default(now())
+  createdBy   String    @db.VarChar(50) 
+  updatedAt   DateTime  @updatedAt 
+  updatedBy   String?   @db.VarChar(50)
+  scheduleOfSubjects ScheduleOfSubjects[]
+  materialDiscussion MaterialDiscussion[]
+
+  @@map("subjects")
 }
 
-model materi {
-  id             Int      @id @default(autoincrement())
-  judul          String   @db.VarChar(50)
-  pembahasan     String   @db.Text
-  tanggal        DateTime @db.Date
-  file           String   @db.Text
-  link           String   @db.VarChar(50)
-  kode_pelajaran String   @db.Char(5)
-  semester       String?  @default("01") @db.Char(2)
-  pertemuan_id   Int
-  tgl_dibuat     DateTime @db.Date
-  dibuat_oleh    String   @db.VarChar(50)
-  tgl_update     DateTime @db.Date
-  update_oleh    String   @db.VarChar(50)
+model ScheduleOfSubjects {
+  id_schedule   Int       @id @default(autoincrement())
+  subjects      Subjects  @relation(fields: [subjectId], references: [id_subject])
+  subjectId     Int
+  semester      Semester @relation(fields: [semesterId], references: [id])
+  semesterId    Int
+  day           String    @db.VarChar(50)
+  start_time    DateTime  @db.Time(0)
+  end_time      DateTime  @db.Time(0)
+  createdAt     DateTime  @default(now())
+  createdBy     String    @db.VarChar(50) 
+  updatedAt     DateTime  @updatedAt 
+  updatedBy     String?   @db.VarChar(50)
+
+  @@map("scheduleOfSubjects")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model nilai {
-  id          Int      @id
-  nomo_siswa  String   @db.Char(20)
-  tugas_id    Int
-  nilai       Float?
-  tgl_update  DateTime @db.Date
-  update_oleh String   @db.Char(20)
+model MaterialDiscussion {
+  id_discuss    Int      @id @default(autoincrement())
+  title         String   @db.VarChar(50)
+  iscuss        String   @db.Text
+  date          DateTime @db.Date
+  file          String   @db.Text
+  link          String   @db.VarChar(50)
+  subjects      Subjects  @relation(fields: [subjectId], references: [id_subject])
+  subjectId     Int
+  semester      Semester @relation(fields: [semesterId], references: [id])
+  semesterId    Int
+  meeting       Int
+  createdAt     DateTime  @default(now())
+  createdBy     String    @db.VarChar(50) 
+  updatedAt     DateTime  @updatedAt 
+  updatedBy     String?   @db.VarChar(50)
+  task Task[]
 
-  @@ignore
+  @@map("MaterialDiscussion")
 }
 
-model role {
+model Task {
+  id_task     Int      @id @default(autoincrement())
+  materialDiscussion  MaterialDiscussion @relation(fields: [discussId], references: [id_discuss])
+  discussId   Int
+  semester    Semester @relation(fields: [semesterId], references: [id])
+  semesterId  Int
+  tugas       String?  @db.VarChar(56)
+  deskripsi   String?  @db.Text
+  file        String   @db.Text
+  meeting     Int
+  updatedAt   DateTime  @updatedAt 
+  updatedBy   String?   @db.VarChar(50)
+  evaluation Evaluation[]
+
+  @@map("task")
+}
+
+model Evaluation {
+  id_evaluation   Int  @id @default(autoincrement())
+  identity_number String   @db.Char(20)
+  task            Task @relation(fields: [taskId], references: [id_task])
+  file            String   @db.Text
+  taskId          Int
+  value           Float?
+  updatedAt       DateTime  @default(now())
+  updatedBy       String?   @db.VarChar(50)
+
+  @@map("evaluation")
+}
+
+model UserRole {
   id   Int    @id @default(autoincrement())
   role String @db.VarChar(30)
+  user Users[]
+
+  @@map("userRole")
 }
 
-model semester {
-  kode String @id @default("01") @db.Char(2)
-  nama String @db.VarChar(30)
+model Semester {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(30)
+  task  Task[]
+  materialDiscussion MaterialDiscussion[]
+  scheduleOfSubjects ScheduleOfSubjects[]
+
+  @@map("semester")
 }
 
-model tugas {
-  id             Int      @id @default(autoincrement())
-  kode_pelajaran String   @db.Char(5)
-  semester       String?  @default("01") @db.Char(2)
-  tugas          String?  @db.VarChar(56)
-  deskripsi      String?  @db.Text
-  kelas_id       String   @db.Char(20)
-  pertemuan      Int
-  tgl_update     DateTime @db.Date
-  update_oleh    String   @db.VarChar(50)
-}
-
-enum users_jenis_kel {
+enum UsersGender {
   L
   P
-}
+} 
