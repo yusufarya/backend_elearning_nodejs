@@ -18,7 +18,7 @@ model Users {
   religion        String        @db.VarChar(30)
   classes         Classes       @relation(fields: [classId], references: [id_class])
   classId         Int           @unique
-  subjectId       String?       @db.Char(5)
+  subjectId       String?       @db.Text
   email           String        @db.VarChar(256)
   password        String        @db.VarChar(256)
   image           String?       @db.Text
@@ -51,7 +51,7 @@ model ClassesCategory {
 }
 
 model Subjects {
-  id_subject  Int       @id
+  id_subject  Int       @id @default(autoincrement())
   subjects    String    @db.VarChar(100)
   classes     Classes @relation(fields: [classId], references: [id_class])
   classId     Int
@@ -84,11 +84,11 @@ model ScheduleOfSubjects {
 
 model MaterialDiscussion {
   id_discuss    Int      @id @default(autoincrement())
-  title         String   @db.VarChar(50)
+  title         String   @db.VarChar(100)
   iscuss        String   @db.Text
   date          DateTime @db.Date
   file          String   @db.Text
-  link          String   @db.VarChar(50)
+  link          String   @db.VarChar(100)
   subjects      Subjects  @relation(fields: [subjectId], references: [id_subject])
   subjectId     Int
   semester      Semester @relation(fields: [semesterId], references: [id])
@@ -109,22 +109,22 @@ model Task {
   discussId   Int
   semester    Semester @relation(fields: [semesterId], references: [id])
   semesterId  Int
-  tugas       String?  @db.VarChar(56)
+  taskTitle   String?  @db.VarChar(100)
   deskripsi   String?  @db.Text
   file        String   @db.Text
   meeting     Int
   updatedAt   DateTime  @updatedAt 
   updatedBy   String?   @db.VarChar(50)
-  evaluation Evaluation[]
+  evaluation  Evaluation[]
 
   @@map("task")
 }
 
 model Evaluation {
-  id_evaluation   Int  @id @default(autoincrement())
-  identity_number String   @db.Char(20)
-  task            Task @relation(fields: [taskId], references: [id_task])
-  file            String   @db.Text
+  id_evaluation   Int     @id @default(autoincrement())
+  identity_number String  @db.Char(20)
+  task            Task    @relation(fields: [taskId], references: [id_task])
+  file            String  @db.Text
   taskId          Int
   value           Float?
   updatedAt       DateTime  @default(now())
@@ -152,6 +152,6 @@ model Semester {
 }
 
 enum UsersGender {
-  L
-  P
+  M
+  F
 } 
