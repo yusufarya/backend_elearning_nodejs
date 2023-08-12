@@ -1,7 +1,7 @@
-import { app } from "./application/web.js";
+import { web } from "./application/web.js";
 
 const port = 3000
 
-app.listen(port, () => {
+web.listen(port, () => {
   console.log("App start");
 }); 

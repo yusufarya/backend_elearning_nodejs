@@ -16,14 +16,14 @@ model Users {
   telp            String        @db.Char(20)
   address         String?       @db.Text
   religion        String        @db.VarChar(30)
-  classes         Classes       @relation(fields: [classId], references: [id_class])
-  classId         Int           @unique
+  classes         Classes?      @relation(fields: [classId], references: [id_class])
+  classId         Int?          @unique
   subjectId       String?       @db.Text
   email           String        @db.VarChar(256)
   password        String        @db.VarChar(256)
   image           String?       @db.Text
-  status          Int
-  role            UserRole     @relation(fields: [roleId], references: [id])
+  status          Int           @default(1)
+  role            UserRole      @relation(fields: [roleId], references: [id])
   roleId          Int
   token           String?       @db.VarChar(100)
   createdAt       DateTime      @db.Date @default(now())

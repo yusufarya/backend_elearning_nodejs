@@ -1,33 +1,157 @@
-import { PrismaClient } from "@prisma/client" 
-import { validate } from "../validation/validation.js"
-import { registerUserValidation } from "../validation/user-validation.js"
-import { ResponseError } from "../error/response-error.js"
-import { hash } from "bcrypt"
+import { validate } from "../validation/validation.js";
+import { getUserValidation, loginUserValidation, registerUserValidation, updateUserValidate } from "../validation/user-validation.js";
+import { prismaClient } from "../application/database.js";
+import { ResponseError } from "../error/response-error.js";
+import bcrypt from "bcrypt";
+import { v4 as uuid } from "uuid";
+import { request } from "express";
+
 
 const register = async (request) => {
     const postUser = validate(registerUserValidation, request)
-
-    const countUser = PrismaClient.user.count({
+    // console.log(postUser.email) //
+    const countUser = await prismaClient.users.count({
         where: {
-            username : postUser.username
+            email: postUser.email
         }
     })
 
     if (countUser === 1) {
-        throw new ResponseError(400, "Username already exists")
+        throw new ResponseError(400, "Email already exists")
     }
 
-    postUser.password = await hash(postUser.password, 10)
+    postUser.password = await bcrypt.hash(postUser.password, 10); 
 
-    return PrismaClient.user.create({
+    return prismaClient.users.create({
         data : postUser,
         select : {
-            username: true,
+            identity_number: true,
+            email: true,
             name: true
         }
     });
 }
 
+const login = async (request) => {
+    const loginRequest = validate(loginUserValidation, request)
+    
+    const users = await prismaClient.users.findFirst({
+        where: {
+            email: loginRequest.email
+        },
+        select: {
+            identity_number: true,
+            email: true,
+            password: true
+        }
+    });
+
+    if (!users) {
+        throw new ResponseError(401, 'User or password wrong');
+    }
+    
+    const isValidatePassword = await bcrypt.compare(loginRequest.password, users.password);
+    
+    if (!isValidatePassword) {
+        throw new ResponseError(401, 'User or password wrong');
+    }
+
+    const getToken = uuid().toString()
+    return prismaClient.users.update({
+        data: {
+            token: getToken
+        },
+        where: {
+            identity_number: users.identity_number
+        },
+        select: {
+            token: true
+        }
+    })
+}
+
+const get = async (identity_number) => {
+    identity_number = validate(getUserValidation, identity_number)
+    
+    const getUser = await prismaClient.users.findUnique({
+        where: {
+            identity_number: identity_number
+        }
+    })
+
+    if(!getUser) {
+        throw new ResponseError(404, "User not found")
+    }
+
+    return getUser;
+}
+
+const update = async (request) => {
+    const user = validate(updateUserValidate, request)
+
+    const totalUserInDatabase = await prismaClient.users.count({
+        where: {
+            identity_number: user.identity_number
+        }
+    })
+
+    if (!totalUserInDatabase) {
+        throw new ResponseError(404, "User not found")        
+    }
+
+    const dataRequest = {};
+    if(user.name) {
+        dataRequest.name = user.name
+    }
+    if (user.gender) {
+        dataRequest.gender = user.gender
+    }
+    if (user.email) {
+        dataRequest.email = user.email
+    }
+    if (user.password) {
+        dataRequest.password = await bcrypt.hash(user.password, 10)
+    }
+    console.log('Update service')
+    console.log(dataRequest)
+    return prismaClient.users.update({
+        data: dataRequest,
+        where: {
+            identity_number: user.identity_number
+        }
+    })
+}
+
+const logout = async (identity_number) => {
+    identity_number = validate(getUserValidation, identity_number);
+
+    const getUser = await prismaClient.users.findUnique({
+        where: {
+            identity_number: identity_number
+        }
+    })
+
+    if(!getUser) {
+        throw new ResponseError(404, "User not found")
+    }
+
+    return prismaClient.users.update({
+        data: {
+            token: null
+        },
+        where: {
+            identity_number: identity_number
+        },
+        select: {
+            email: true
+        }
+    })
+}
+
 export default {
-    register
+    register,
+    login,
+    get,
+    update,
+    logout
 }
