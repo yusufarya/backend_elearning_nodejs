@@ -8,42 +8,42 @@ datasource db {
 }
 
 model Users {
-  identity_number String        @id @db.Char(20)
-  name            String        @db.VarChar(100)
+  identity_number String      @id @db.Char(20)
+  name            String      @db.VarChar(100)
   gender          UsersGender
-  place_of_birth  String        @db.VarChar(30)
-  date_of_birth   DateTime      @db.Date
-  telp            String        @db.Char(20)
-  address         String?       @db.Text
-  religion        String        @db.VarChar(30)
-  classes         Classes?      @relation(fields: [classId], references: [id_class])
-  classId         Int?          @unique
-  subjectId       String?       @db.Text
-  email           String        @db.VarChar(256)
-  password        String        @db.VarChar(256)
-  image           String?       @db.Text
-  status          Int           @default(1)
-  role            UserRole      @relation(fields: [roleId], references: [id])
+  place_of_birth  String      @db.VarChar(30)
+  date_of_birth   DateTime    @db.Date
+  telp            String      @db.Char(20)
+  address         String?     @db.Text
+  religion        String      @db.VarChar(30)
+  classes         Classes?    @relation(fields: [classId], references: [id_class])
+  classId         Int?        @unique
+  subjectId       String?     @db.Text
+  email           String      @db.VarChar(256)
+  password        String      @db.VarChar(256)
+  image           String?     @db.Text
+  status          Int         @default(1)
+  role            UserRole    @relation(fields: [roleId], references: [id])
   roleId          Int
-  token           String?       @db.VarChar(100)
-  createdAt       DateTime      @db.Date @default(now())
+  token           String?     @db.VarChar(100)
+  createdAt       DateTime    @default(now()) @db.Date
 
   @@map("users")
 }
 
 model Classes {
-  id_class    Int    @id @default(autoincrement())
-  class String @db.VarChar(30)
-  users Users?
+  id_class   Int               @id @default(autoincrement())
+  class      String            @db.VarChar(30)
+  users      Users?
   categories ClassesCategory[]
-  subjects Subjects[]
+  subjects   Subjects[]
 
   @@map("classes")
 }
 
 model ClassesCategory {
-  id    Int     @id @default(autoincrement())
-  name  String  @db.VarChar(100)
+  id      Int     @id @default(autoincrement())
+  name    String  @db.VarChar(100)
   classes Classes @relation(fields: [classId], references: [id_class])
   classId Int
 
@@ -51,14 +51,14 @@ model ClassesCategory {
 }
 
 model Subjects {
-  id_subject  Int       @id @default(autoincrement())
-  subjects    String    @db.VarChar(100)
-  classes     Classes @relation(fields: [classId], references: [id_class])
-  classId     Int
-  createdAt   DateTime  @default(now())
-  createdBy   String    @db.VarChar(50) 
-  updatedAt   DateTime  @updatedAt 
-  updatedBy   String?   @db.VarChar(50)
+  id_subject         Int                  @id @default(autoincrement())
+  subjects           String               @db.VarChar(100)
+  classes            Classes              @relation(fields: [classId], references: [id_class])
+  classId            Int
+  createdAt          DateTime             @default(now())
+  createdBy          String               @db.VarChar(50)
+  updatedAt          DateTime             @updatedAt
+  updatedBy          String?              @db.VarChar(50)
   scheduleOfSubjects ScheduleOfSubjects[]
   materialDiscussion MaterialDiscussion[]
 
@@ -66,85 +66,85 @@ model Subjects {
 }
 
 model ScheduleOfSubjects {
-  id_schedule   Int       @id @default(autoincrement())
-  subjects      Subjects  @relation(fields: [subjectId], references: [id_subject])
-  subjectId     Int
-  semester      Semester @relation(fields: [semesterId], references: [id])
-  semesterId    Int
-  day           String    @db.VarChar(50)
-  start_time    DateTime  @db.Time(0)
-  end_time      DateTime  @db.Time(0)
-  createdAt     DateTime  @default(now())
-  createdBy     String    @db.VarChar(50) 
-  updatedAt     DateTime  @updatedAt 
-  updatedBy     String?   @db.VarChar(50)
+  id_schedule Int      @id @default(autoincrement())
+  subjects    Subjects @relation(fields: [subjectId], references: [id_subject])
+  subjectId   Int
+  semester    Semester @relation(fields: [semesterId], references: [id])
+  semesterId  Int
+  day         String   @db.VarChar(50)
+  start_time  DateTime @db.Time(0)
+  end_time    DateTime @db.Time(0)
+  createdAt   DateTime @default(now())
+  createdBy   String   @db.VarChar(50)
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?  @db.VarChar(50)
 
   @@map("scheduleOfSubjects")
 }
 
 model MaterialDiscussion {
-  id_discuss    Int      @id @default(autoincrement())
-  title         String   @db.VarChar(100)
-  iscuss        String   @db.Text
-  date          DateTime @db.Date
-  file          String   @db.Text
-  link          String   @db.VarChar(100)
-  subjects      Subjects  @relation(fields: [subjectId], references: [id_subject])
-  subjectId     Int
-  semester      Semester @relation(fields: [semesterId], references: [id])
-  semesterId    Int
-  meeting       Int
-  createdAt     DateTime  @default(now())
-  createdBy     String    @db.VarChar(50) 
-  updatedAt     DateTime  @updatedAt 
-  updatedBy     String?   @db.VarChar(50)
-  task Task[]
+  id_discuss Int      @id @default(autoincrement())
+  title      String   @db.VarChar(100)
+  iscuss     String   @db.Text
+  date       DateTime @db.Date
+  file       String   @db.Text
+  link       String   @db.VarChar(100)
+  subjects   Subjects @relation(fields: [subjectId], references: [id_subject])
+  subjectId  Int
+  semester   Semester @relation(fields: [semesterId], references: [id])
+  semesterId Int
+  meeting    Int
+  createdAt  DateTime @default(now())
+  createdBy  String   @db.VarChar(50)
+  updatedAt  DateTime @updatedAt
+  updatedBy  String?  @db.VarChar(50)
+  task       Task[]
 
   @@map("MaterialDiscussion")
 }
 
 model Task {
-  id_task     Int      @id @default(autoincrement())
-  materialDiscussion  MaterialDiscussion @relation(fields: [discussId], references: [id_discuss])
-  discussId   Int
-  semester    Semester @relation(fields: [semesterId], references: [id])
-  semesterId  Int
-  taskTitle   String?  @db.VarChar(100)
-  deskripsi   String?  @db.Text
-  file        String   @db.Text
-  meeting     Int
-  updatedAt   DateTime  @updatedAt 
-  updatedBy   String?   @db.VarChar(50)
-  evaluation  Evaluation[]
+  id_task            Int                @id @default(autoincrement())
+  materialDiscussion MaterialDiscussion @relation(fields: [discussId], references: [id_discuss])
+  discussId          Int
+  semester           Semester           @relation(fields: [semesterId], references: [id])
+  semesterId         Int
+  taskTitle          String?            @db.VarChar(100)
+  deskripsi          String?            @db.Text
+  file               String             @db.Text
+  meeting            Int
+  updatedAt          DateTime           @updatedAt
+  updatedBy          String?            @db.VarChar(50)
+  evaluation         Evaluation[]
 
   @@map("task")
 }
 
 model Evaluation {
-  id_evaluation   Int     @id @default(autoincrement())
-  identity_number String  @db.Char(20)
-  task            Task    @relation(fields: [taskId], references: [id_task])
-  file            String  @db.Text
+  id_evaluation   Int      @id @default(autoincrement())
+  identity_number String   @db.Char(20)
+  task            Task     @relation(fields: [taskId], references: [id_task])
+  file            String   @db.Text
   taskId          Int
   value           Float?
-  updatedAt       DateTime  @default(now())
-  updatedBy       String?   @db.VarChar(50)
+  updatedAt       DateTime @default(now())
+  updatedBy       String?  @db.VarChar(50)
 
   @@map("evaluation")
 }
 
 model UserRole {
-  id   Int    @id @default(autoincrement())
-  role String @db.VarChar(30)
+  id   Int     @id @default(autoincrement())
+  role String  @db.VarChar(30)
   user Users[]
 
   @@map("userRole")
 }
 
 model Semester {
-  id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(30)
-  task  Task[]
+  id                 Int                  @id @default(autoincrement())
+  name               String               @db.VarChar(30)
+  task               Task[]
   materialDiscussion MaterialDiscussion[]
   scheduleOfSubjects ScheduleOfSubjects[]
 
@@ -154,4 +154,4 @@ model Semester {
 enum UsersGender {
   M
   F
-} 
+}
