@@ -1,7 +1,10 @@
 import { web } from "./application/web.js";
+import dotenv from "dotenv";
 
-const port = 3000
+dotenv.config();
 
-web.listen(port, () => {
-  console.log("App start");
-}); 
+const PORT = process.env.PORT;
+
+web.listen(PORT, () => {
+  console.log("App start on port " + PORT);
+});

@@ -2,9 +2,11 @@
   "name": "elearning",
   "version": "1.0.0",
   "description": "this project just for learn node js api",
-  "main": "src/main.js",
+  "main": "nodemon src/main.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "seed": "node prisma/seed.js",
+    "dev": "nodemon src/main.js"
   },
   "jest": {
     "transform": {
@@ -15,12 +17,14 @@
   "license": "ISC",
   "type": "module",
   "prisma": {
-    "seed": "prisma/seed.js"
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@joi/date": "^2.1.0",
     "@prisma/client": "^5.1.1",
     "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "joi": "^17.9.2",
     "uuid": "^9.0.0"
@@ -32,6 +36,7 @@
     "@types/jest": "^29.5.3",
     "babel-jest": "^29.6.2",
     "jest": "^29.6.2",
+    "nodemon": "^3.0.1",
     "prisma": "^5.1.1",
     "supertest": "^6.3.3"
   }
