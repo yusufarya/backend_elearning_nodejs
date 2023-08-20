@@ -7,15 +7,15 @@ export const prismaClient = new PrismaClient({
             level: 'query',
         },
         {
-            emit: 'event',
+            emit: 'stdout',
             level: 'error',
         },
         {
-            emit: 'event',
+            emit: 'stdout',
             level: 'info',
         },
         {
-            emit: 'event',
+            emit: 'stdout',
             level: 'warn',
         },
     ],

@@ -1,25 +1,23 @@
 import { validate } from "../validation/validation.js";
-import { getUserValidation, loginUserValidation, registerUserValidation, updateUserValidate } from "../validation/user-validation.js";
+import { getUserNomorValidation, getUserValidation, loginUserValidation, registerUserValidation, updateUserValidate } from "../validation/user-validation.js";
 import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/response-error.js";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import { request } from "express";
-
 
 const register = async (request) => {
     const postUser = validate(registerUserValidation, request)
-    // console.log(postUser.email) //
+    // console.log(postUser)
     const countUser = await prismaClient.users.count({
         where: {
             email: postUser.email
         }
     })
-
+    
     if (countUser === 1) {
         throw new ResponseError(400, "Email already exists")
     }
-
+    
     postUser.password = await bcrypt.hash(postUser.password, 10); 
 
     return prismaClient.users.create({
@@ -84,6 +82,27 @@ const get = async (identity_number) => {
     }
 
     return getUser;
+}
+
+const getLastIdentityNumber = async (roleId) => {
+
+    roleId = validate(getUserNomorValidation, roleId)
+    console.log('service2')
+    console.log(roleId)
+
+    const getLastNomor = await prismaClient.users.findFirst({
+        where : {
+            roleId : roleId
+        },
+        select: {
+            identity_number: true
+        }
+    })
+
+    if(!getLastNomor) {
+        return roleId = 0;
+    }
+    return getLastNomor;
 }
 
 const update = async (request) => {
@@ -152,6 +171,7 @@ export default {
     register,
     login,
     get,
+    getLastIdentityNumber,
     update,
     logout
 }

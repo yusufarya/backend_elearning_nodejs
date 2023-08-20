@@ -11,8 +11,8 @@ const registerUserValidation = Joi.object({
   gender: Joi.string().valid("M", "F"),
   place_of_birth: Joi.string().max(100).required(),
   date_of_birth: Joi.date().format("YYYY-MM-DD").utc().required(),
-  telp: Joi.string().max(20).optional(),
-  religion: Joi.string().max(20).required(),
+  telp: Joi.string().max(20).required(),
+  religion: Joi.string().max(20).optional(),
   status: Joi.number().max(1).required(),
 });
 
@@ -22,6 +22,8 @@ const loginUserValidation = Joi.object({
 });
 
 const getUserValidation = Joi.string().max(100).required();
+
+const getUserNomorValidation = Joi.number().max(1).required();
 
 const updateUserValidate = Joi.object({
   identity_number: Joi.string().max(20).required(),
@@ -39,5 +41,6 @@ export {
   registerUserValidation,
   loginUserValidation,
   getUserValidation,
+  getUserNomorValidation,
   updateUserValidate,
 };

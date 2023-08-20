@@ -15,7 +15,7 @@ model Users {
   date_of_birth   DateTime    @db.Date
   telp            String      @db.Char(20)
   address         String?     @db.Text
-  religion        String      @db.VarChar(30)
+  religion        String?     @db.VarChar(30)
   classes         Classes?    @relation(fields: [classId], references: [id_class])
   classId         Int?        @unique
   subjectId       String?     @db.Text

@@ -34,6 +34,18 @@ const get = async(req, res, next) => {
     }
 }
 
+const getLastIdentityNumber = async(req, res, next) => {
+
+    try {
+        const result = await userService.getLastIdentityNumber(req.body.roleId)
+        res.status(200).json({
+            data: result
+        })
+    } catch (err) {
+        next(err)
+    }
+}
+
 const update = async (req, res, next) => {
     try {
         const identity_number = req.user.identity_number
@@ -65,6 +77,7 @@ export default {
     register,
     login,
     get,
+    getLastIdentityNumber,
     update,
     logout
 }
