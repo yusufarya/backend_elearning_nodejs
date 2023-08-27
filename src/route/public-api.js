@@ -6,7 +6,7 @@ const publicRouter = new express.Router();
 // USERS API //
 publicRouter.post('/api/users', userController.register)
 publicRouter.get('/api/users/getLastIdentityNumber', userController.getLastIdentityNumber)
-publicRouter.get('/api/users/login', userController.login) 
+publicRouter.post('/api/users/login', userController.login) 
 
 export {
     publicRouter

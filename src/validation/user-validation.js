@@ -23,7 +23,7 @@ const loginUserValidation = Joi.object({
 
 const getUserValidation = Joi.string().max(100).required();
 
-const getUserNomorValidation = Joi.number().max(1).required();
+// const getUserNomorValidation = Joi.number().required();
 
 const updateUserValidate = Joi.object({
   identity_number: Joi.string().max(20).required(),
@@ -41,6 +41,6 @@ export {
   registerUserValidation,
   loginUserValidation,
   getUserValidation,
-  getUserNomorValidation,
+  // getUserNomorValidation,
   updateUserValidate,
 };

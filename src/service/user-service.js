@@ -1,5 +1,5 @@
 import { validate } from "../validation/validation.js";
-import { getUserNomorValidation, getUserValidation, loginUserValidation, registerUserValidation, updateUserValidate } from "../validation/user-validation.js";
+import { getUserValidation, loginUserValidation, registerUserValidation, updateUserValidate } from "../validation/user-validation.js";
 import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/response-error.js";
 import bcrypt from "bcrypt";
@@ -86,13 +86,12 @@ const get = async (identity_number) => {
 
 const getLastIdentityNumber = async (roleId) => {
 
-    roleId = validate(getUserNomorValidation, roleId)
-    console.log('service2')
-    console.log(roleId)
-
     const getLastNomor = await prismaClient.users.findFirst({
         where : {
             roleId : roleId
+        },
+        orderBy: {
+            identity_number: 'desc' // Order by createdAt in descending order
         },
         select: {
             identity_number: true
