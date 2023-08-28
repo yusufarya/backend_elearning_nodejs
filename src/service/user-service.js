@@ -74,7 +74,11 @@ const get = async (identity_number) => {
     const getUser = await prismaClient.users.findUnique({
         where: {
             identity_number: identity_number
+        },
+        include: {
+            role: true // Include the related user data
         }
+
     })
 
     if(!getUser) {
