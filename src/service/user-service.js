@@ -45,7 +45,7 @@ const login = async (request) => {
     });
 
     if (!users) {
-        throw new ResponseError(401, 'User or password wrong');
+        throw new ResponseError(401, 'User not found');
     }
     
     const isValidatePassword = await bcrypt.compare(loginRequest.password, users.password);
@@ -78,7 +78,6 @@ const get = async (identity_number) => {
         include: {
             role: true // Include the related user data
         }
-
     })
 
     if(!getUser) {
@@ -90,7 +89,7 @@ const get = async (identity_number) => {
 
 const getLastIdentityNumber = async (roleId) => {
 
-    const getLastNomor = await prismaClient.users.findFirst({
+    const getLastNumber = await prismaClient.users.findFirst({
         where : {
             roleId : roleId
         },
@@ -102,10 +101,10 @@ const getLastIdentityNumber = async (roleId) => {
         }
     })
 
-    if(!getLastNomor) {
-        return roleId = 0;
+    if(!getLastNumber) {
+        return {'identity_number' : 'ADM2023080000'};
     }
-    return getLastNomor;
+    return getLastNumber;
 }
 
 const update = async (request) => {
