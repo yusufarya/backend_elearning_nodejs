@@ -76,7 +76,11 @@ const get = async (identity_number) => {
             identity_number: identity_number
         },
         include: {
-            role: true // Include the related user data
+            role: {
+                select: {
+                    role: true
+                }
+            }
         }
     })
 
