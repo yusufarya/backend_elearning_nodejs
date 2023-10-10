@@ -21,7 +21,7 @@ async function main() {
     },
   });
 
-  console.log({ admin, teacher, student });
+  // console.log({ admin, teacher, student });
 }
 
 main()

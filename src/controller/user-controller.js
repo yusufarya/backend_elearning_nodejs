@@ -35,7 +35,6 @@ const get = async (req, res, next) => {
 };
 
 const getLastIdentityNumber = async (req, res, next) => {
-  // console.log(req)
   try {
     const result = await userService.getLastIdentityNumber(req.body.roleId);
     res.status(200).json({
