@@ -8,7 +8,7 @@ const registerUserValidation = Joi.object({
   password: Joi.string().max(256).required(),
   name: Joi.string().max(100).required(),
   roleId: Joi.number().integer().required(),
-  gender: Joi.string().valid("M", "F"),
+  gender: Joi.string().valid("M", "F").required(),
   place_of_birth: Joi.string().max(100).required(),
   date_of_birth: Joi.date().format("YYYY-MM-DD").utc().required(),
   telp: Joi.string().max(20).required(),
@@ -33,6 +33,7 @@ const updateUserValidate = Joi.object({
   place_of_birth: Joi.string().max(100).optional(),
   date_of_birth: Joi.date().format("YYYY-MM-DD").utc().optional(),
   telp: Joi.string().max(20).optional(),
+  address: Joi.string().optional(),
   religion: Joi.string().max(20).optional(),
   status: Joi.number().max(1).optional(),
 });

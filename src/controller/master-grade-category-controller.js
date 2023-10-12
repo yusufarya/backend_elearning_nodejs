@@ -1,8 +1,8 @@
-import masterClassCategoryService from "../service/master-class-category-service.js";
+import masterGradeCategoryService from "../service/master-grade-category-service.js";
 
 const getAll = async (req, res, next) => {
   try {
-    const result = await masterClassCategoryService.getAllClassCategory();
+    const result = await masterGradeCategoryService.getAllGradeCategory();
     res.status(200).json({
       data: result,
     });
@@ -13,7 +13,7 @@ const getAll = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const result = await masterClassCategoryService.addClassCategory(req.body);
+    const result = await masterGradeCategoryService.addGradeCategory(req.body);
     res.status(200).json({
       data: result,
     });

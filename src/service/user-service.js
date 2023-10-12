@@ -21,6 +21,15 @@ const register = async (request) => {
   if (countUser === 1) {
     throw new ResponseError(400, "Email already exists");
   }
+  const countNumberId = await prismaClient.users.count({
+    where: {
+      identity_number: postUser.identity_number,
+    },
+  });
+
+  if (countNumberId === 1) {
+    throw new ResponseError(400, "NumberId already exists");
+  }
 
   postUser.password = await bcrypt.hash(postUser.password, 10);
 
@@ -136,6 +145,9 @@ const update = async (request) => {
   }
   if (user.gender) {
     dataRequest.gender = user.gender;
+  }
+  if (user.address) {
+    dataRequest.address = user.address;
   }
   if (user.email) {
     dataRequest.email = user.email;

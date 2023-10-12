@@ -1,8 +1,8 @@
 import express from "express";
 import { authMiddleware } from "../middleware/user-middleware.js";
 import userController from "../controller/user-controller.js";
-import masterClassController from "../controller/master-class-controller.js";
-import masterClassCategoryController from "../controller/master-class-category-controller.js";
+import masterGradeController from "../controller/master-grade-controller.js";
+import masterGradeCategoryController from "../controller/master-grade-category-controller.js";
 
 const userRouter = new express.Router();
 userRouter.use(authMiddleware);
@@ -13,15 +13,15 @@ userRouter.patch("/api/users/current", userController.update);
 userRouter.delete("/api/users/logout", userController.logout);
 
 // MASTER //
-// class data api (Data Kelas) //
-userRouter.get("/api/class", masterClassController.getAll);
-userRouter.post("/api/addClass", masterClassController.create);
-userRouter.get("/api/getClass/:id", masterClassController.getId);
-userRouter.patch("/api/updateClass/:id", masterClassController.update);
-userRouter.delete("/api/deleteClass/", masterClassController.deleteClass);
+// grade data api (Data Kelas) //
+userRouter.get("/api/grade", masterGradeController.getAll);
+userRouter.post("/api/addGrade", masterGradeController.create);
+userRouter.get("/api/getGrade/:id", masterGradeController.getId);
+userRouter.patch("/api/updateGrade/:id", masterGradeController.update);
+userRouter.delete("/api/deleteGrade/", masterGradeController.remove);
 
-// class category data api (Data Kategori Kelas) //
-userRouter.get("/api/classCategory", masterClassCategoryController.getAll);
-userRouter.post("/api/addClassCategory", masterClassCategoryController.create);
+// grade category data api (Data Kategori Kelas) //
+userRouter.get("/api/gradeCategory", masterGradeCategoryController.getAll);
+userRouter.post("/api/addGradeCategory", masterGradeCategoryController.create);
 
 export { userRouter };
