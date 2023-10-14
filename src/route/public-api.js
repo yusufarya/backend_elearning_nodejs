@@ -5,7 +5,7 @@ const publicRouter = new express.Router();
 
 // USERS API //
 publicRouter.post("/api/users", userController.register);
-publicRouter.get(
+publicRouter.post(
   "/api/users/getLastIdentityNumber",
   userController.getLastIdentityNumber
 );

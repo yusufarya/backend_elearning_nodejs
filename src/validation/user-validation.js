@@ -4,15 +4,45 @@ const Joi = BaseJoi.extend(JoiDate);
 
 const registerUserValidation = Joi.object({
   identity_number: Joi.string().max(20).required(),
+  fullname: Joi.string().max(100).required(),
+  gender: Joi.string().valid("M", "F").required(),
+  place_of_birth: Joi.string().max(100).required(),
+  date_of_birth: Joi.date().format("YYYY-MM-DD").utc().required(),
+  telp: Joi.string().max(20).required(),
+  religion: Joi.string().max(20).optional(),
   email: Joi.string().max(100).email().required(),
   password: Joi.string().max(256).required(),
-  name: Joi.string().max(100).required(),
+  roleId: Joi.number().integer().required(),
+  status: Joi.number().max(1).required(),
+});
+
+const registerTeachValidation = Joi.object({
+  identity_number: Joi.string().max(20).required(),
+  email: Joi.string().max(100).email().required(),
+  password: Joi.string().max(256).required(),
+  fullname: Joi.string().max(100).required(),
   roleId: Joi.number().integer().required(),
   gender: Joi.string().valid("M", "F").required(),
   place_of_birth: Joi.string().max(100).required(),
   date_of_birth: Joi.date().format("YYYY-MM-DD").utc().required(),
   telp: Joi.string().max(20).required(),
   religion: Joi.string().max(20).optional(),
+  subjectId: Joi.number().integer().required(),
+  status: Joi.number().max(1).required(),
+});
+
+const registerMhsValidation = Joi.object({
+  identity_number: Joi.string().max(20).required(),
+  email: Joi.string().max(100).email().required(),
+  password: Joi.string().max(256).required(),
+  fullname: Joi.string().max(100).required(),
+  roleId: Joi.number().integer().required(),
+  gender: Joi.string().valid("M", "F").required(),
+  place_of_birth: Joi.string().max(100).required(),
+  date_of_birth: Joi.date().format("YYYY-MM-DD").utc().required(),
+  telp: Joi.string().max(20).required(),
+  religion: Joi.string().max(20).optional(),
+  gradeId: Joi.number().integer().required(),
   status: Joi.number().max(1).required(),
 });
 
@@ -23,12 +53,10 @@ const loginUserValidation = Joi.object({
 
 const getUserValidation = Joi.string().max(100).required();
 
-// const getUserNomorValidation = Joi.number().required();
-
 const updateUserValidate = Joi.object({
   identity_number: Joi.string().max(20).required(),
   email: Joi.string().max(100).email().optional(),
-  name: Joi.string().max(100).optional(),
+  fullname: Joi.string().max(100).optional(),
   gender: Joi.string().valid("M", "F"),
   place_of_birth: Joi.string().max(100).optional(),
   date_of_birth: Joi.date().format("YYYY-MM-DD").utc().optional(),
@@ -40,8 +68,9 @@ const updateUserValidate = Joi.object({
 
 export {
   registerUserValidation,
+  registerMhsValidation,
+  registerTeachValidation,
   loginUserValidation,
   getUserValidation,
-  // getUserNomorValidation,
   updateUserValidate,
 };

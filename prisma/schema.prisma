@@ -9,7 +9,7 @@ datasource db {
 
 model Users {
   identity_number String      @id @db.Char(20)
-  name            String      @db.VarChar(100)
+  fullname        String      @db.VarChar(100)
   gender          UsersGender
   place_of_birth  String      @db.VarChar(30)
   date_of_birth   DateTime    @db.Date
@@ -18,8 +18,8 @@ model Users {
   religion        String?     @db.VarChar(30)
   major           Major?      @relation(fields: [majorId], references: [id_major])
   majorId         Int?        @unique
-  grade           Grade?    @relation(fields: [gradeId], references: [id_grade])
-  gradeId         Int?          @unique
+  grade           Grade?      @relation(fields: [gradeId], references: [id_grade])
+  gradeId         Int?        @unique
   subjectId       String?     @db.Text
   email           String      @db.VarChar(256)
   password        String      @db.VarChar(256)
@@ -52,10 +52,10 @@ model Grade {
 }
 
 model GradeCategory {
-  id      Int     @id @default(autoincrement())
-  name    String  @db.VarChar(100)
-  grade   Grade @relation(fields: [gradeId], references: [id_grade])
-  gradeId Int
+  id_category       Int     @id @default(autoincrement())
+  name              String  @db.VarChar(100)
+  grade             Grade @relation(fields: [gradeId], references: [id_grade])
+  gradeId           Int
 
   @@map("gradeCategory")
 }
@@ -63,7 +63,7 @@ model GradeCategory {
 model Subjects {
   id_subject         Int                  @id @default(autoincrement())
   subjects           String               @db.VarChar(100)
-  grade             Grade              @relation(fields: [gradeId], references: [id_grade])
+  grade              Grade                @relation(fields: [gradeId], references: [id_grade])
   gradeId            Int
   createdAt          DateTime             @default(now())
   createdBy          String               @db.VarChar(50)

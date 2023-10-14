@@ -1,9 +1,11 @@
 import { validate } from "../validation/validation.js";
 import {
+  registerUserValidation,
+  registerMhsValidation,
   getUserValidation,
   loginUserValidation,
-  registerUserValidation,
   updateUserValidate,
+  registerTeachValidation,
 } from "../validation/user-validation.js";
 import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/response-error.js";
@@ -11,7 +13,21 @@ import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 
 const register = async (request) => {
-  const postUser = validate(registerUserValidation, request);
+  const roleId = parseInt(request.roleId);
+  switch (roleId) {
+    case 1:
+      var postUser = validate(registerUserValidation, request);
+      break;
+    case 2:
+      var postUser = validate(registerTeachValidation, request);
+      break;
+    case 3:
+      var postUser = validate(registerMhsValidation, request);
+      break;
+    default:
+      break;
+  }
+
   const countUser = await prismaClient.users.count({
     where: {
       email: postUser.email,
@@ -21,6 +37,7 @@ const register = async (request) => {
   if (countUser === 1) {
     throw new ResponseError(400, "Email already exists");
   }
+
   const countNumberId = await prismaClient.users.count({
     where: {
       identity_number: postUser.identity_number,
@@ -37,8 +54,9 @@ const register = async (request) => {
     data: postUser,
     select: {
       identity_number: true,
+      fullname: true,
+      gender: true,
       email: true,
-      name: true,
     },
   });
 };
@@ -121,7 +139,13 @@ const getLastIdentityNumber = async (roleId) => {
   });
 
   if (!getLastNumber) {
-    return { identity_number: "ADM2023080000" };
+    if (roleId == 1) {
+      return { identity_number: "ADM23080000" };
+    } else if (roleId == 2) {
+      return { identity_number: "TCH23080000" };
+    } else if (roleId == 3) {
+      return { identity_number: "STD23080000" };
+    }
   }
   return getLastNumber;
 };
@@ -140,8 +164,8 @@ const update = async (request) => {
   }
 
   const dataRequest = {};
-  if (user.name) {
-    dataRequest.name = user.name;
+  if (user.fullname) {
+    dataRequest.fullname = user.fullname;
   }
   if (user.gender) {
     dataRequest.gender = user.gender;

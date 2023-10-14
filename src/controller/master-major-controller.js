@@ -1,8 +1,8 @@
-import masterGradeCategoryService from "../service/master-grade-category-service.js";
+import masterMajorService from "../service/master-major-service.js";
 
 const getAll = async (req, res, next) => {
   try {
-    const result = await masterGradeCategoryService.getAllGradeCategory();
+    const result = await masterMajorService.getAllMajor();
     res.status(200).json({
       data: result,
     });
@@ -13,7 +13,7 @@ const getAll = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const result = await masterGradeCategoryService.addGradeCategory(req.body);
+    const result = await masterMajorService.addMajor(req.body);
     res.status(200).json({
       data: result,
     });
@@ -24,10 +24,8 @@ const create = async (req, res, next) => {
 
 const getId = async (req, res, next) => {
   try {
-    const categoryId = req.params.id;
-    const result = await masterGradeCategoryService.getGradeCategoryById(
-      categoryId
-    );
+    const gradeId = req.params.id;
+    const result = await masterMajorService.getMajorById(gradeId);
     res.status(200).json({
       data: result,
     });
@@ -38,12 +36,9 @@ const getId = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const categoryId = req.params.id;
+    const majorId = req.params.id;
     const request = req.body;
-    const result = await masterGradeCategoryService.updateGradeCategory(
-      categoryId,
-      request
-    );
+    const result = await masterMajorService.updateMajor(majorId, request);
     res.status(200).json({
       data: result,
     });
@@ -54,12 +49,10 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    const id_category = req.body.id_category;
-    const result = await masterGradeCategoryService.deleteGradeCategory(
-      id_category
-    );
+    const id_major = req.body.id_major;
+    const result = await masterMajorService.deleteMajor(id_major);
     res.status(200).json({
-      data: "Id " + result.id_category + " has been deleted.",
+      data: "Id " + result.id_major + " has been deleted.",
     });
   } catch (error) {
     next(error);

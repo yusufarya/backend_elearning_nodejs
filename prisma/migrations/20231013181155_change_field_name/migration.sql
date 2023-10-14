@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE `users` (
     `identity_number` CHAR(20) NOT NULL,
-    `name` VARCHAR(100) NOT NULL,
+    `fullname` VARCHAR(100) NOT NULL,
     `gender` ENUM('M', 'F') NOT NULL,
     `place_of_birth` VARCHAR(30) NOT NULL,
     `date_of_birth` DATE NOT NULL,
@@ -42,11 +42,11 @@ CREATE TABLE `grade` (
 
 -- CreateTable
 CREATE TABLE `gradeCategory` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id_category` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(100) NOT NULL,
     `gradeId` INTEGER NOT NULL,
 
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id_category`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable

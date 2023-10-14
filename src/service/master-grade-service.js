@@ -50,8 +50,8 @@ const getGradeById = async (gradeId) => {
 };
 
 const updateGrade = async (id, request) => {
-  const datarequest = validate(requestGradeValidation, request);
   id = parseInt(id);
+  const datarequest = validate(requestGradeValidation, request);
 
   const getGrade = await prismaClient.grade.count({
     where: {
@@ -72,7 +72,20 @@ const updateGrade = async (id, request) => {
 };
 
 const deleteGrade = async (id) => {
-  id = parseInt(id);
+  id = validate(getGradeValidation, id);
+
+  const getGradeCategory = await prismaClient.gradeCategory.count({
+    where: {
+      gradeId: id,
+    },
+  });
+
+  if (getGradeCategory) {
+    throw new ResponseError(
+      403,
+      "Can't remove data, data assigned to category "
+    );
+  }
 
   const getGrade = await prismaClient.grade.count({
     where: {

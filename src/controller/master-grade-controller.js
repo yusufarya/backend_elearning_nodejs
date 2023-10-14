@@ -49,15 +49,16 @@ const update = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   try {
-    const id_grade = req.body.id;
-    const result = await masterGradeService.deleteGrade(id_grade);
+    const id_major = req.body.id_major;
+    const result = await masterGradeService.deleteGrade(id_major);
     res.status(200).json({
-      data: "Id " + result.id_grade + " berhasil dihapus.",
+      data: "Id " + result.id_major + " has been deleted.",
     });
   } catch (error) {
     next(error);
   }
 };
+
 export default {
   getAll,
   create,
