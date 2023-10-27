@@ -48,13 +48,13 @@ const getGradeCategoryById = async (categoryId) => {
     where: {
       id_category: categoryId,
     },
-    // include: {
-    //   grade: {
-    //     select: {
-    //       grade: true,
-    //     },
-    //   },
-    // },
+    include: {
+      grade: {
+        select: {
+          grade: true,
+        },
+      },
+    },
   });
 
   if (!getGradeCategory) {
