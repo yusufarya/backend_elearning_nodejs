@@ -13,7 +13,7 @@ import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 
 const register = async (request) => {
-  const roleId = parseInt(request.roleId);
+  const roleId = request.roleId ? parseInt(request.roleId) : 1;
   switch (roleId) {
     case 1:
       var postUser = validate(registerUserValidation, request);
