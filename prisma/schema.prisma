@@ -37,6 +37,7 @@ model Major {
   id_major Int          @id @default(autoincrement())
   name String           @db.VarChar(30)
   users Users?
+  subject Subjects?
 
   @@map("major")
 }
@@ -54,7 +55,7 @@ model Grade {
 model GradeCategory {
   id_category       Int     @id @default(autoincrement())
   name              String  @db.VarChar(100)
-  grade             Grade @relation(fields: [gradeId], references: [id_grade])
+  grade             Grade   @relation(fields: [gradeId], references: [id_grade])
   gradeId           Int
 
   @@map("gradeCategory")
@@ -62,12 +63,14 @@ model GradeCategory {
 
 model Subjects {
   id_subject         Int                  @id @default(autoincrement())
-  subjects           String               @db.VarChar(100)
+  name               String               @db.VarChar(100)
   grade              Grade                @relation(fields: [gradeId], references: [id_grade])
   gradeId            Int
+  major              Major?               @relation(fields: [majorId], references: [id_major])
+  majorId            Int?                 @unique
   createdAt          DateTime             @default(now())
   createdBy          String               @db.VarChar(50)
-  updatedAt          DateTime             @updatedAt
+  updatedAt          DateTime?            @updatedAt
   updatedBy          String?              @db.VarChar(50)
   scheduleOfSubjects ScheduleOfSubjects[]
   materialDiscussion MaterialDiscussion[]
