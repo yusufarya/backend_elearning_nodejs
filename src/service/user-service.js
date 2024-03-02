@@ -6,6 +6,7 @@ import {
   loginUserValidation,
   updateUserValidate,
   registerTeachValidation,
+  getUserByRoleValidation,
 } from "../validation/user-validation.js";
 import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/response-error.js";
@@ -35,7 +36,7 @@ const register = async (request) => {
   });
 
   if (countUser === 1) {
-    throw new ResponseError(400, "Email already exists");
+    throw new ResponseError(400, "email exists");
   }
 
   const countNumberId = await prismaClient.users.count({
@@ -45,7 +46,7 @@ const register = async (request) => {
   });
 
   if (countNumberId === 1) {
-    throw new ResponseError(400, "NumberId already exists");
+    throw new ResponseError(400, "number exists");
   }
 
   postUser.password = await bcrypt.hash(postUser.password, 10);
@@ -125,6 +126,29 @@ const get = async (identity_number) => {
   return getUser;
 };
 
+const getDataUser = async (roleId) => {
+  roleId = validate(getUserByRoleValidation, roleId);
+
+  const getData = await prismaClient.users.findMany({
+    where: {
+      roleId: roleId,
+    },
+    include: {
+      role: {
+        select: {
+          role: true,
+        },
+      },
+    },
+  });
+
+  if (!getData) {
+    throw new ResponseError(404, "Data not found");
+  }
+
+  return getData;
+};
+
 const getLastIdentityNumber = async (roleId) => {
   const getLastNumber = await prismaClient.users.findFirst({
     where: {
@@ -151,6 +175,8 @@ const getLastIdentityNumber = async (roleId) => {
 };
 
 const update = async (request) => {
+  console.log("update");
+  console.log(request);
   const user = validate(updateUserValidate, request);
 
   const totalUserInDatabase = await prismaClient.users.count({
@@ -169,6 +195,9 @@ const update = async (request) => {
   }
   if (user.gender) {
     dataRequest.gender = user.gender;
+  }
+  if (user.religion) {
+    dataRequest.religion = user.religion;
   }
   if (user.address) {
     dataRequest.address = user.address;
@@ -218,6 +247,7 @@ export default {
   register,
   login,
   get,
+  getDataUser,
   getLastIdentityNumber,
   update,
   logout,

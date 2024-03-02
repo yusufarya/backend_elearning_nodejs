@@ -52,6 +52,7 @@ const loginUserValidation = Joi.object({
 });
 
 const getUserValidation = Joi.string().max(100).required();
+const getUserByRoleValidation = Joi.number().max(3).required();
 
 const updateUserValidate = Joi.object({
   identity_number: Joi.string().max(20).required(),
@@ -72,5 +73,6 @@ export {
   registerTeachValidation,
   loginUserValidation,
   getUserValidation,
+  getUserByRoleValidation,
   updateUserValidate,
 };

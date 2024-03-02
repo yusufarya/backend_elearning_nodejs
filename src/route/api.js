@@ -5,14 +5,34 @@ import M_MajorController from "../controller/master-major-controller.js";
 import M_GradeController from "../controller/master-grade-controller.js";
 import M_CategoryController from "../controller/master-grade-category-controller.js";
 import M_SubjectController from "../controller/master-subject-controller.js";
+import multer from "multer";
+import moment from "moment";
 
 const userRouter = new express.Router();
-userRouter.use(authMiddleware);
+// userRouter.use(authMiddleware);
+
+const date = moment().format("YYYYMMDD-HMS");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/img/"); // File uploads will be saved in the "uploads" directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, date + "_" + file.originalname); // Keep the original file name
+  },
+});
+
+const upload = multer({ storage });
 
 // USERS API //
 userRouter.get("/api/users/current", userController.get);
 userRouter.patch("/api/users/current", userController.update);
+userRouter.put(
+  "/api/users/updatePhoto",
+  upload.single("file"),
+  userController.updatePhoto
+);
 userRouter.delete("/api/users/logout", userController.logout);
+userRouter.get("/api/data-user/:roleId", userController.getDataUser);
 
 // MASTER //
 

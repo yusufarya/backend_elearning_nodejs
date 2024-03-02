@@ -52,11 +52,12 @@ CREATE TABLE `gradeCategory` (
 -- CreateTable
 CREATE TABLE `subjects` (
     `id_subject` INTEGER NOT NULL AUTO_INCREMENT,
-    `subjects` VARCHAR(100) NOT NULL,
+    `name` VARCHAR(100) NOT NULL,
     `gradeId` INTEGER NOT NULL,
+    `majorId` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `createdBy` VARCHAR(50) NOT NULL,
-    `updatedAt` DATETIME(3) NOT NULL,
+    `updatedAt` DATETIME(3) NULL,
     `updatedBy` VARCHAR(50) NULL,
 
     PRIMARY KEY (`id_subject`)
@@ -155,6 +156,9 @@ ALTER TABLE `gradeCategory` ADD CONSTRAINT `gradeCategory_gradeId_fkey` FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE `subjects` ADD CONSTRAINT `subjects_gradeId_fkey` FOREIGN KEY (`gradeId`) REFERENCES `grade`(`id_grade`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `subjects` ADD CONSTRAINT `subjects_majorId_fkey` FOREIGN KEY (`majorId`) REFERENCES `major`(`id_major`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `scheduleOfSubjects` ADD CONSTRAINT `scheduleOfSubjects_subjectId_fkey` FOREIGN KEY (`subjectId`) REFERENCES `subjects`(`id_subject`) ON DELETE RESTRICT ON UPDATE CASCADE;
